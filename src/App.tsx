@@ -4,7 +4,7 @@ function App() {
 
   return (
     <>
-    <h1>Hello world</h1>
+    <h1 className='font-bold'>start Game</h1>
     </>
   )
 }
