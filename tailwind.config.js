@@ -24,6 +24,9 @@ export default {
         },
         white: 'hsl(0, 0%, 99%)',
       },
+      screens: {
+        tablet: "768px",
+      }
     }
   },
   plugins: [],
