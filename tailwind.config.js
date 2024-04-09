@@ -26,6 +26,7 @@ export default {
       },
       screens: {
         tablet: "768px",
+        laptop: "1250px",
       }
     }
   },
