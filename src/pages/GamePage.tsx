@@ -21,7 +21,7 @@ import terminal from "../assets/icons/terminal-solid.svg";
 import tree from "../assets/icons/tree-solid.svg";
 
 export default function GamePage() {
-  const fourByFour: boolean = false;
+  const fourByFour: boolean = true;
   const Icons: boolean = true;
 
   let numberCount: number;

@@ -29,7 +29,7 @@ export default function Circle({ value, icons = true, row = true }: CircleProps)
         </span>
       )}
 
-      <div className=" absolute size-full top-0 left-0 bg-neutral-700 transition-all duration-200 ease-in-out hover:bg-neutral-400 opacity-0"></div>
+      <div className=" absolute size-full top-0 left-0 bg-neutral-700 transition-all duration-200 ease-in-out hover:bg-neutral-400 opacity-1"></div>
     </button>
   );
 }
