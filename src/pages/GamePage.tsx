@@ -21,7 +21,7 @@ import terminal from "../assets/icons/terminal-solid.svg";
 import tree from "../assets/icons/tree-solid.svg";
 
 export default function GamePage() {
-  const fourByFour: boolean = true;
+  const fourByFour: boolean = false;
   const Icons: boolean = true;
 
   let numberCount: number;
@@ -102,7 +102,7 @@ export default function GamePage() {
   return (
     <div className="w-full px-[5vw] bg-white">
       {/* fix the gap */}
-      <div className="max-w-[420px]  min-h-screen flex flex-col justify-start items-center gap-[5rem] sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 mx-auto">
+      <div className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 mx-auto">
         <div className="flex w-full justify-between items-center">
           <h1 className="text-2xl font-bold text-neutral-800 sm:text-[2.5rem]">
             memory
@@ -119,7 +119,7 @@ export default function GamePage() {
             </button>
           </div>
         </div>
-        <div className="w-full my-auto">
+        <div className="w-full mt-[2rem] sm:mt-[5rem] ">
           <div
             className={`w-full  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]  aspect-square grid ${
               fourByFour
@@ -151,8 +151,8 @@ export default function GamePage() {
                   )
                 )}
           </div>
-          <div>ok</div>
         </div>
+        <div>ok</div>
       </div>
     </div>
   );
