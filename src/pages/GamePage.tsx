@@ -19,7 +19,8 @@ import moon from "../assets/icons/moon-solid.svg";
 import star from "../assets/icons/star-solid.svg";
 import terminal from "../assets/icons/terminal-solid.svg";
 import tree from "../assets/icons/tree-solid.svg";
-import Timer from "../components/Timer";
+
+import TimerCont from "../components/TimerCont";
 
 export default function GamePage() {
   const fourByFour: boolean = false;
@@ -153,8 +154,8 @@ export default function GamePage() {
                 )}
           </div>
         </div>
-        <div>
-          <Timer/>
+        <div className="w-full mt-6 min-[1000px]:mt-[3rem]  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]">
+          <TimerCont/>
         </div>
       </div>
     </div>
