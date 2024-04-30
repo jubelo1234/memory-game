@@ -19,6 +19,7 @@ import moon from "../assets/icons/moon-solid.svg";
 import star from "../assets/icons/star-solid.svg";
 import terminal from "../assets/icons/terminal-solid.svg";
 import tree from "../assets/icons/tree-solid.svg";
+import Timer from "../components/Timer";
 
 export default function GamePage() {
   const fourByFour: boolean = false;
@@ -152,7 +153,9 @@ export default function GamePage() {
                 )}
           </div>
         </div>
-        <div>ok</div>
+        <div>
+          <Timer/>
+        </div>
       </div>
     </div>
   );
