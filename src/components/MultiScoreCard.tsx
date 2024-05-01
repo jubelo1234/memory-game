@@ -1,7 +1,7 @@
 import ScoreCard from "./ScoreCard";
 
 export default function MultiScoreCard() {
-  const no_of_players: number = 4;
+  const no_of_players: number = 2;
 
   return (
     <div
