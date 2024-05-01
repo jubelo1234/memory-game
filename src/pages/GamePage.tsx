@@ -21,6 +21,7 @@ import terminal from "../assets/icons/terminal-solid.svg";
 import tree from "../assets/icons/tree-solid.svg";
 
 import TimerCont from "../components/TimerCont";
+import MultiScoreCard from "../components/MultiScoreCard";
 
 export default function GamePage() {
   const fourByFour: boolean = false;
@@ -36,6 +37,26 @@ export default function GamePage() {
 
   const [numbersArray, setNumbersArray] = useState<number[]>([]);
   const [iconsArray, setIconsArray] = useState<string[]>([]);
+
+  const [divWidth, setDivWidth] = useState<number>(0);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const width = document.getElementById("gameGrid")?.offsetWidth || 0;
+      setDivWidth(width);
+    };
+
+    // Initial call to set width
+    updateWidth();
+
+    // Update width on window resize
+    window.addEventListener("resize", updateWidth);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, []);
 
   useEffect(() => {
     const doubledNumbersArray = Array.from(Array(numberCount).keys()).flatMap(
@@ -123,6 +144,7 @@ export default function GamePage() {
         </div>
         <div className="w-full mt-[2rem] sm:mt-[5rem] ">
           <div
+            id="gameGrid"
             className={`w-full  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]  aspect-square grid ${
               fourByFour
                 ? "grid-cols-4 grid-rows-4 tablet:gap-4"
@@ -154,8 +176,11 @@ export default function GamePage() {
                 )}
           </div>
         </div>
-        <div className="w-full mt-6 min-[1000px]:mt-[3rem]  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]">
+        {/* <div className="w-full mt-6 min-[1000px]:mt-[3rem]  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]">
           <TimerCont/>
+        </div> */}
+        <div style={{ width: `${divWidth}px` }} className="sm:!w-full mt-6 min-[1000px]:mt-[3rem]">
+          <MultiScoreCard />
         </div>
       </div>
     </div>
