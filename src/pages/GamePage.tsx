@@ -121,11 +121,10 @@ export default function GamePage() {
     setIconsArray(iconsToShow);
   }, [fourByFour]);
 
-  console.log(numbersArray);
   return (
     <div className="w-full px-[5vw] bg-white">
       {/* fix the gap */}
-      <div className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 mx-auto">
+      <div className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto">
         <div className="flex w-full justify-between items-center">
           <h1 className="text-2xl font-bold text-neutral-800 sm:text-[2.5rem]">
             memory
@@ -179,7 +178,10 @@ export default function GamePage() {
         {/* <div className="w-full mt-6 min-[1000px]:mt-[3rem]  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]">
           <TimerCont/>
         </div> */}
-        <div style={{ width: `${divWidth}px` }} className="sm:!w-full mt-6 min-[1000px]:mt-[3rem]">
+        <div
+          style={{ width: `${divWidth}px` }}
+          className="sm:!w-full mt-6 min-[1000px]:mt-[3rem]"
+        >
           <MultiScoreCard />
         </div>
       </div>
