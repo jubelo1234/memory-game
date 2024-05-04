@@ -31,7 +31,7 @@ export default function Home() {
             <button className={` w-[49%] tablet:w-[47%] bg-neutral-300`}>6x6</button>
           </div>
         </div>
-        <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primary-400 hover:bg-primary-300 focus-visible:ring-primary-400 leading-none text-white py-3 px-6 text-[1.125rem] sm:py-5 sm:text-[2rem] mt-[12px] tablet:mt-1 w-full">
+        <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 leading-none text-white py-3 px-6 text-[1.125rem] sm:py-5 sm:text-[2rem] mt-[12px] tablet:mt-1 w-full">
           Start Game
         </button>
       </div>

@@ -8,7 +8,7 @@ type CircleProps = {
 
 export default function Circle({ value, icons = true, row = true }: CircleProps) {
   return (
-    <button className="size-full rounded-[100%] relative overflow-hidden bg-primary-400 flex justify-center items-center">
+    <button className="size-full rounded-[100%] relative overflow-hidden bg-primaryy-400 flex justify-center items-center">
       {icons ? (
         row ? (
           <img src={value as string} alt="4" className=" max-h-9 md:max-h-12" />
