@@ -22,6 +22,15 @@ import tree from "../assets/icons/tree-solid.svg";
 
 import TimerCont from "../components/TimerCont";
 import MultiScoreCard from "../components/MultiScoreCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function GamePage() {
   const fourByFour: boolean = false;
@@ -39,6 +48,18 @@ export default function GamePage() {
   const [iconsArray, setIconsArray] = useState<string[]>([]);
 
   const [divWidth, setDivWidth] = useState<number>(0);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  const updateWidth = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateWidth);
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, []);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -129,9 +150,28 @@ export default function GamePage() {
           <h1 className="text-2xl font-bold text-neutral-800 sm:text-[2.5rem]">
             memory
           </h1>
-          <button className="rounded-full block sm:hidden font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
-            Menu
-          </button>
+
+          {width < 640 && (
+            <Dialog>
+              <DialogTrigger>
+                <button className="rounded-full  font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
+                  Menu
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-gray-300  rounded-[0.6rem] max-w-[327px] h-[226px] w-[90vw] space-y-0 gap-1 justify-between flex flex-col  border-none p-6">
+                <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primary-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem]">
+                  Restart
+                </button>
+                <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">
+                  New Game
+                </button>
+                <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">
+                  Resume Game
+                </button>
+              </DialogContent>
+            </Dialog>
+          )}
+
           <div className="hidden sm:flex justify-center items-center w-fit">
             <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem] mr-4">
               Restart
