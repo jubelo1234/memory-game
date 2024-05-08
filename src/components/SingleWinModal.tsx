@@ -20,7 +20,7 @@ function SingleWinModal({ open, setModal }: ModalType) {
         </p>
         <div className="mt-6 sm:mt-7">
           <div
-            role="listitem"
+            
             className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500"
           >
             <span className="text-[0.8125rem]  sm:leading-[1.125rem] font-bold sm:text-[1.125rem]">
@@ -31,7 +31,7 @@ function SingleWinModal({ open, setModal }: ModalType) {
             </span>
           </div>
           <div
-            role="listitem"
+            
             className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500"
           >
             <span className="text-[0.8125rem]  sm:leading-[1.125rem] font-bold sm:text-[1.125rem]">

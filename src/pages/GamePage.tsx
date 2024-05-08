@@ -24,6 +24,7 @@ import TimerCont from "../components/TimerCont";
 import MultiScoreCard from "../components/MultiScoreCard";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SingleWinModal from "@/components/SingleWinModal";
+import MultiWinModal from "@/components/MultiWinModal";
 
 export default function GamePage() {
   const fourByFour: boolean = false;
@@ -138,7 +139,8 @@ export default function GamePage() {
 
   return (
     <div className="w-full px-[5vw] bg-white">
-      <SingleWinModal open={openModal} setModal={setOpenModal} />
+      {/* <SingleWinModal open={openModal} setModal={setOpenModal} /> */}
+      <MultiWinModal open={openModal} setModal={setOpenModal} />
       <div className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto">
         <div className="flex w-full justify-between items-center">
           <h1 className="text-2xl font-bold text-neutral-800 sm:text-[2.5rem]">
