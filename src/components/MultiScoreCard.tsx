@@ -1,7 +1,12 @@
+import { useSelector } from "react-redux";
 import ScoreCard from "./ScoreCard";
+import { RootState } from "@/state/store";
 
 export default function MultiScoreCard() {
-  const no_of_players: number = 4;
+  const playersNo = useSelector(
+    (state: RootState) => state.setup.number_of_players
+  );
+  const no_of_players: number = playersNo;
 
   return (
     <div

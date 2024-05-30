@@ -25,10 +25,19 @@ import MultiScoreCard from "../components/MultiScoreCard";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SingleWinModal from "@/components/SingleWinModal";
 import MultiWinModal from "@/components/MultiWinModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
+import { motion, Variants } from "framer-motion";
 
 export default function GamePage() {
-  const fourByFour: boolean = false;
-  const Icons: boolean = true;
+  const {
+    grid_size,
+    number_of_players: players,
+    theme,
+  } = useSelector((state: RootState) => state.setup);
+
+  const fourByFour: boolean = grid_size === 4 ? true : false;
+  const Icons: boolean = theme === "icons" ? true : false;
 
   let numberCount: number;
 
@@ -137,11 +146,41 @@ export default function GamePage() {
     setIconsArray(iconsToShow);
   }, [fourByFour]);
 
+  const variants: Variants = {
+    initial: {
+      opacity: 0,
+      y: "35%",
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        ease: "easeInOut",
+        duration: 1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -100,
+      transition: {
+        ease: "easeOut",
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
     <div className="w-full px-[5vw] bg-white">
       {/* <SingleWinModal open={openModal} setModal={setOpenModal} /> */}
       <MultiWinModal open={openModal} setModal={setOpenModal} />
-      <div className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto">
+      <motion.div
+        key="home"
+        variants={variants}
+        initial="initial"
+        animate="animate"
+        
+        className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto"
+      >
         <div className="flex w-full justify-between items-center">
           <h1 className="text-2xl font-bold text-neutral-800 sm:text-[2.5rem]">
             memory
@@ -211,16 +250,20 @@ export default function GamePage() {
                 )}
           </div>
         </div>
-        {/* <div className="w-full mt-6 min-[1000px]:mt-[3rem]  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]">
-          <TimerCont/>
-        </div> */}
-        <div
-          style={{ width: `${divWidth}px` }}
-          className="sm:!w-full mt-6 min-[1000px]:mt-[3rem]"
-        >
-          <MultiScoreCard />
-        </div>
-      </div>
+
+        {players > 1 ? (
+          <div
+            style={{ width: `${divWidth}px` }}
+            className="sm:!w-full mt-6 min-[1000px]:mt-[3rem]"
+          >
+            <MultiScoreCard />
+          </div>
+        ) : (
+          <div className="w-full mt-6 min-[1000px]:mt-[3rem]  max-w-[327px] sm:max-w-[460px] tablet:max-w-[540px]">
+            <TimerCont />
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }

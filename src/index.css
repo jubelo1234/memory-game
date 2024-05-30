@@ -74,3 +74,14 @@
     @apply bg-background text-foreground;
   }
 } */
+
+body {
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  overflow: -moz-scrollbars-none; /* For Firefox */
+  /* overflow: hidden; */
+  background-color: hsl(206, 45%, 15%);
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
