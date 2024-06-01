@@ -1,8 +1,10 @@
-import { useState } from "react";
+
 import Timer from "./Timer";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 export default function TimerCont() {
-    const [moves, setMoves] = useState<number>(3);
+    const moves = useSelector((state: RootState) => state.setup.moves)
   return (
     <div className="grid grid-cols-2 gap-[1.4rem] sm:gap-[1.7rem] ">
       <Timer />

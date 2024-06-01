@@ -25,9 +25,16 @@ import MultiScoreCard from "../components/MultiScoreCard";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SingleWinModal from "@/components/SingleWinModal";
 import MultiWinModal from "@/components/MultiWinModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { motion, Variants } from "framer-motion";
+import {
+  changePlayer,
+  clearPickedIndex,
+  matchedArray,
+  setCard1,
+  setCard2,
+} from "@/state/setup/setupSlice";
 
 export default function GamePage() {
   const {
@@ -35,6 +42,8 @@ export default function GamePage() {
     number_of_players: players,
     theme,
   } = useSelector((state: RootState) => state.setup);
+
+  const dispatch = useDispatch();
 
   const fourByFour: boolean = grid_size === 4 ? true : false;
   const Icons: boolean = theme === "icons" ? true : false;
@@ -53,6 +62,46 @@ export default function GamePage() {
   const [divWidth, setDivWidth] = useState<number>(0);
   const [width, setWidth] = useState(window.innerWidth);
   const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const [checkingMatch, setCheckingMatch] = useState<boolean>(false);
+
+  const { card1, card2 } = useSelector((state: RootState) => state.setup);
+
+  function handleCards(cardData: string | number) {
+    if (card1 === null) {
+      dispatch(setCard1(cardData));
+    } else { 
+      dispatch(setCard2(cardData));
+    }
+  }
+
+  useEffect(() => {
+    function handleReset() {
+      dispatch(setCard1(null));
+      dispatch(setCard2(null));
+      dispatch(clearPickedIndex());
+      setCheckingMatch(false);
+    }
+
+    function checkCardMatch() {
+      if (card1 === card2) {
+        setTimeout(() => {
+          dispatch(matchedArray(card1 as string | number));
+          handleReset();
+        }, 950);
+      } else {
+        setTimeout(() => {
+          dispatch(changePlayer());
+          handleReset();
+        }, 950);
+      }
+    }
+
+    if (card1 !== null && card2 !== null) {
+      setCheckingMatch(true);
+      checkCardMatch();
+    }
+  }, [card1, card2, dispatch]);
 
   const updateWidth = () => {
     setWidth(window.innerWidth);
@@ -132,13 +181,17 @@ export default function GamePage() {
     };
 
     const doubledIconsArray = gridIcons.flatMap((icon) => [icon, icon]);
+    const fourByFourIcons = gridIcons
+      .slice(0, 8)
+      .flatMap((icon) => [icon, icon]);
 
     // Shuffle the array
     const scatteredDoubledIcons = shuffleArray(doubledIconsArray);
+    const fourByFourShuffledIcons = shuffleArray(fourByFourIcons);
 
     let iconsToShow: string[];
     if (fourByFour) {
-      iconsToShow = scatteredDoubledIcons.slice(0, 16);
+      iconsToShow = [...fourByFourShuffledIcons];
     } else {
       iconsToShow = [...scatteredDoubledIcons];
     }
@@ -178,7 +231,6 @@ export default function GamePage() {
         variants={variants}
         initial="initial"
         animate="animate"
-        
         className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto"
       >
         <div className="flex w-full justify-between items-center">
@@ -229,22 +281,48 @@ export default function GamePage() {
               ? iconsArray.map((data, index) =>
                   fourByFour ? (
                     <div key={index} className="size-full">
-                      <Circle value={data} icons={true} />
+                      <Circle
+                        handleCards={handleCards}
+                        value={data}
+                        icons={true}
+                        index={index}
+                        checking={checkingMatch}
+                      />
                     </div>
                   ) : (
                     <div key={index} className="size-full">
-                      <Circle value={data} icons={true} row={false} />
+                      <Circle
+                        handleCards={handleCards}
+                        value={data}
+                        icons={true}
+                        row={false}
+                        index={index}
+                        checking={checkingMatch}
+                      />
                     </div>
                   )
                 )
               : numbersArray.map((data, index) =>
                   fourByFour ? (
                     <div key={index} className="size-full">
-                      <Circle value={data} icons={false} />
+                      <Circle
+                        handleCards={handleCards}
+                        value={data}
+                        icons={false}
+                        index={index}
+                        checking={checkingMatch}
+                      />
                     </div>
                   ) : (
                     <div key={index} className="size-full">
-                      <Circle value={data} icons={false} row={false} />
+                      <Circle
+                        handleCards={handleCards}
+                        value={data}
+                        icons={false}
+                        row={false}
+                        index={index}
+                        checking={checkingMatch}
+                      />
                     </div>
                   )
                 )}

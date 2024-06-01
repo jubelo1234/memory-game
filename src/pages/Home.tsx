@@ -32,7 +32,7 @@ export default function Home() {
   const variants: Variants = {
     initial: {
       opacity: 0,
-      y: "50%",
+      y: "45%",
     },
     animate: {
       opacity: 1,
