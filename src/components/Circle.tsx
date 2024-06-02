@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 type CircleProps = {
   icons?: boolean;
   value: string | number;
-  row?: boolean;
+
   index: number;
   checking: boolean;
 
@@ -18,15 +18,17 @@ type CircleProps = {
 export default function Circle({
   value,
   icons = true,
-  row = true,
+
   index,
   checking,
 
   handleCards,
 }: CircleProps) {
-  const matchedCards = useSelector(
-    (state: RootState) => state.setup.matchedItems
+  const { matchedItems: matchedCards, grid_size } = useSelector(
+    (state: RootState) => state.setup
   );
+
+  const row: boolean = grid_size === 4 ? true : false;
 
   const { card1, card2, pickedCardIndex } = useSelector(
     (state: RootState) => state.setup
@@ -75,7 +77,7 @@ export default function Circle({
 
       <div
         className={` absolute size-full top-0 left-0 bg-neutral-700 transition-all duration-200 ease-in-out hover:bg-neutral-400 ${
-          showCard || matched ? "opacity-0" : "opacity-1"
+          showCard || matched ? "opacity-0" : "opacity-0"
         }`}
       ></div>
     </button>

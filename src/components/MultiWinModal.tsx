@@ -1,11 +1,21 @@
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import { RootState } from "@/state/store";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-type ModalType = {
-  open: boolean;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
+export default function MultiWinModal() {
+  const [open, setModal] = useState<boolean>(false);
+  const { gameEnd, number_of_players } = useSelector(
+    (state: RootState) => state.setup
+  );
 
-export default function MultiWinModal({ open, setModal }: ModalType) {
+  useEffect(() => {
+    if (gameEnd && number_of_players >= 2) {
+      setModal(true);
+    } else {
+      setModal(false);
+    }
+  }, [gameEnd, number_of_players]);
   return (
     <AlertDialog open={open} onOpenChange={setModal}>
       <AlertDialogContent
@@ -27,10 +37,7 @@ export default function MultiWinModal({ open, setModal }: ModalType) {
               6 Pairs
             </span>
           </div>
-          <div
-            
-            className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500"
-          >
+          <div className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500">
             <span className="text-[0.8125rem] font-bold sm:text-[1.125rem] sm:leading-[1.125rem]">
               Player 2
             </span>
@@ -38,8 +45,6 @@ export default function MultiWinModal({ open, setModal }: ModalType) {
               2 Pairs
             </span>
           </div>
-
-
         </div>
         <div className="flex flex-col sm:hidden">
           <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">

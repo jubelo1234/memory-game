@@ -1,14 +1,21 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import { RootState } from "@/state/store";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-type ModalType = {
-  open: boolean;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
+function SingleWinModal() {
+  const [open, setModal] = useState<boolean>(false);
+  const { gameEnd, number_of_players } = useSelector(
+    (state: RootState) => state.setup
+  );
 
-function SingleWinModal({ open, setModal }: ModalType) {
+  useEffect(() => {
+    if (gameEnd && number_of_players <= 1) {
+      setModal(true);
+    } else {
+      setModal(false);
+    }
+  }, [gameEnd, number_of_players]);
   return (
     <AlertDialog open={open} onOpenChange={setModal}>
       <AlertDialogContent className="w-[90vw] border-none outline-none max-w-[400px] sm:max-w-[524px] md:max-w-[664px]  flex flex-col rounded-[0.6rem] bg-gray-300 py-[1.5rem] px-6 sm:rounded-[1.2rem] sm:px-14 sm:py-[3rem] sm:pb-[3.5rem] opacity-100 scale-100">
@@ -19,10 +26,7 @@ function SingleWinModal({ open, setModal }: ModalType) {
           Game over! Here's how you got on...
         </p>
         <div className="mt-6 sm:mt-7">
-          <div
-            
-            className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500"
-          >
+          <div className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500">
             <span className="text-[0.8125rem]  sm:leading-[1.125rem] font-bold sm:text-[1.125rem]">
               Time Elapsed
             </span>
@@ -30,10 +34,7 @@ function SingleWinModal({ open, setModal }: ModalType) {
               0:54
             </span>
           </div>
-          <div
-            
-            className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500"
-          >
+          <div className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500">
             <span className="text-[0.8125rem]  sm:leading-[1.125rem] font-bold sm:text-[1.125rem]">
               Moves Taken
             </span>

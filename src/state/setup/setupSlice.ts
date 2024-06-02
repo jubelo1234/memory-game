@@ -5,10 +5,12 @@ type Setupstate = {
   number_of_players: number;
   grid_size: number;
   start: boolean;
+  gameEnd: boolean;
   currentPlayer: number;
   time: string;
   moves: number;
   matchedItems: (string | number)[];
+  gridItems: (string | number)[];
   card1: string | number | null;
   card2: string | number | null;
   pickedCardIndex: number[];
@@ -26,6 +28,8 @@ const initialState: Setupstate = {
   card1: null,
   card2: null,
   pickedCardIndex: [],
+  gameEnd: false,
+  gridItems: [],
 };
 
 const setupSlice = createSlice({
@@ -72,6 +76,20 @@ const setupSlice = createSlice({
     clearPickedIndex: (state) => {
       state.pickedCardIndex = [];
     },
+    setGameEnd: (state) => {
+      state.gameEnd = true;
+    },
+    setGameStart: (state) => {
+      state.gameEnd = false;
+    },
+    setGridItems: (state, action: PayloadAction<number[] | string[]>) => {
+      state.gridItems = action.payload;
+    },
+    deleteGridItem: (state, action: PayloadAction<number | string>) => {
+      state.gridItems = state.gridItems.filter(
+        (item) => item != action.payload
+      );
+    },
   },
 });
 
@@ -88,5 +106,9 @@ export const {
   setCard1,
   setPickedIndex,
   clearPickedIndex,
+  setGameEnd,
+  setGridItems,
+  deleteGridItem,
+  setGameStart,
 } = setupSlice.actions;
 export default setupSlice.reducer;

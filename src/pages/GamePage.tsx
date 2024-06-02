@@ -1,25 +1,6 @@
 import { useEffect, useState } from "react";
 import Circle from "../components/Circle";
 
-import anchor from "../assets/icons/anchor-solid.svg";
-import atom from "../assets/icons/atom-solid.svg";
-import bolt from "../assets/icons/bolt-lightning-solid.svg";
-import bomb from "../assets/icons/bomb-solid.svg";
-import book from "../assets/icons/book-solid.svg";
-import carrot from "../assets/icons/carrot-solid.svg";
-import cat from "../assets/icons/cat-solid.svg";
-import crow from "../assets/icons/crow-solid.svg";
-import fish from "../assets/icons/fish-solid.svg";
-import flask from "../assets/icons/flask-solid.svg";
-import wizard from "../assets/icons/hat-wizard-solid.svg";
-import jet from "../assets/icons/jet-fighter-up-solid.svg";
-import lightbulb from "../assets/icons/lightbulb-solid.svg";
-import meteor from "../assets/icons/meteor-solid.svg";
-import moon from "../assets/icons/moon-solid.svg";
-import star from "../assets/icons/star-solid.svg";
-import terminal from "../assets/icons/terminal-solid.svg";
-import tree from "../assets/icons/tree-solid.svg";
-
 import TimerCont from "../components/TimerCont";
 import MultiScoreCard from "../components/MultiScoreCard";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -28,80 +9,25 @@ import MultiWinModal from "@/components/MultiWinModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { motion, Variants } from "framer-motion";
-import {
-  changePlayer,
-  clearPickedIndex,
-  matchedArray,
-  setCard1,
-  setCard2,
-} from "@/state/setup/setupSlice";
+
+import useSetGrid from "@/hooks/useSetGrid";
+import useMatchCards from "@/hooks/useMatchCards";
+
 
 export default function GamePage() {
-  const {
-    grid_size,
-    number_of_players: players,
-    theme,
-  } = useSelector((state: RootState) => state.setup);
+  const { number_of_players: players, grid_size } = useSelector(
+    (state: RootState) => state.setup
+  );
 
-  const dispatch = useDispatch();
+
 
   const fourByFour: boolean = grid_size === 4 ? true : false;
-  const Icons: boolean = theme === "icons" ? true : false;
+  const { gridArray } = useSetGrid();
+  const { checkingMatch, handleCards } = useMatchCards();
 
-  let numberCount: number;
-
-  if (fourByFour) {
-    numberCount = 8;
-  } else {
-    numberCount = 18;
-  }
-
-  const [numbersArray, setNumbersArray] = useState<number[]>([]);
-  const [iconsArray, setIconsArray] = useState<string[]>([]);
-
+  
   const [divWidth, setDivWidth] = useState<number>(0);
   const [width, setWidth] = useState(window.innerWidth);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-
-  const [checkingMatch, setCheckingMatch] = useState<boolean>(false);
-
-  const { card1, card2 } = useSelector((state: RootState) => state.setup);
-
-  function handleCards(cardData: string | number) {
-    if (card1 === null) {
-      dispatch(setCard1(cardData));
-    } else { 
-      dispatch(setCard2(cardData));
-    }
-  }
-
-  useEffect(() => {
-    function handleReset() {
-      dispatch(setCard1(null));
-      dispatch(setCard2(null));
-      dispatch(clearPickedIndex());
-      setCheckingMatch(false);
-    }
-
-    function checkCardMatch() {
-      if (card1 === card2) {
-        setTimeout(() => {
-          dispatch(matchedArray(card1 as string | number));
-          handleReset();
-        }, 950);
-      } else {
-        setTimeout(() => {
-          dispatch(changePlayer());
-          handleReset();
-        }, 950);
-      }
-    }
-
-    if (card1 !== null && card2 !== null) {
-      setCheckingMatch(true);
-      checkCardMatch();
-    }
-  }, [card1, card2, dispatch]);
 
   const updateWidth = () => {
     setWidth(window.innerWidth);
@@ -109,6 +35,7 @@ export default function GamePage() {
 
   useEffect(() => {
     window.addEventListener("resize", updateWidth);
+    
     return () => {
       window.removeEventListener("resize", updateWidth);
     };
@@ -131,73 +58,6 @@ export default function GamePage() {
       window.removeEventListener("resize", updateWidth);
     };
   }, []);
-
-  useEffect(() => {
-    const doubledNumbersArray = Array.from(Array(numberCount).keys()).flatMap(
-      (number) => [number, number]
-    );
-
-    const shuffleArray = (array: number[]) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    };
-
-    const scatteredNumbers = shuffleArray(doubledNumbersArray);
-
-    setNumbersArray(scatteredNumbers);
-  }, [numberCount]);
-
-  useEffect(() => {
-    const gridIcons: string[] = [
-      anchor,
-      atom,
-      bolt,
-      bomb,
-      book,
-      carrot,
-      cat,
-      crow,
-      fish,
-      flask,
-      wizard,
-      jet,
-      lightbulb,
-      meteor,
-      moon,
-      star,
-      terminal,
-      tree,
-    ];
-
-    const shuffleArray = (array: any[]) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    };
-
-    const doubledIconsArray = gridIcons.flatMap((icon) => [icon, icon]);
-    const fourByFourIcons = gridIcons
-      .slice(0, 8)
-      .flatMap((icon) => [icon, icon]);
-
-    // Shuffle the array
-    const scatteredDoubledIcons = shuffleArray(doubledIconsArray);
-    const fourByFourShuffledIcons = shuffleArray(fourByFourIcons);
-
-    let iconsToShow: string[];
-    if (fourByFour) {
-      iconsToShow = [...fourByFourShuffledIcons];
-    } else {
-      iconsToShow = [...scatteredDoubledIcons];
-    }
-
-    setIconsArray(iconsToShow);
-  }, [fourByFour]);
 
   const variants: Variants = {
     initial: {
@@ -224,8 +84,8 @@ export default function GamePage() {
 
   return (
     <div className="w-full px-[5vw] bg-white">
-      {/* <SingleWinModal open={openModal} setModal={setOpenModal} /> */}
-      <MultiWinModal open={openModal} setModal={setOpenModal} />
+      <SingleWinModal />
+      <MultiWinModal />
       <motion.div
         key="home"
         variants={variants}
@@ -277,55 +137,17 @@ export default function GamePage() {
                 : "grid-cols-6 grid-rows-6 tablet:gap-3"
             } gap-2 mx-auto `}
           >
-            {Icons
-              ? iconsArray.map((data, index) =>
-                  fourByFour ? (
-                    <div key={index} className="size-full">
-                      <Circle
-                        handleCards={handleCards}
-                        value={data}
-                        icons={true}
-                        index={index}
-                        checking={checkingMatch}
-                      />
-                    </div>
-                  ) : (
-                    <div key={index} className="size-full">
-                      <Circle
-                        handleCards={handleCards}
-                        value={data}
-                        icons={true}
-                        row={false}
-                        index={index}
-                        checking={checkingMatch}
-                      />
-                    </div>
-                  )
-                )
-              : numbersArray.map((data, index) =>
-                  fourByFour ? (
-                    <div key={index} className="size-full">
-                      <Circle
-                        handleCards={handleCards}
-                        value={data}
-                        icons={false}
-                        index={index}
-                        checking={checkingMatch}
-                      />
-                    </div>
-                  ) : (
-                    <div key={index} className="size-full">
-                      <Circle
-                        handleCards={handleCards}
-                        value={data}
-                        icons={false}
-                        row={false}
-                        index={index}
-                        checking={checkingMatch}
-                      />
-                    </div>
-                  )
-                )}
+            {gridArray.map((item, index) => (
+              <div key={index} className="size-full">
+                <Circle
+                  handleCards={handleCards}
+                  value={item}
+                  icons={true}
+                  index={index}
+                  checking={checkingMatch}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
