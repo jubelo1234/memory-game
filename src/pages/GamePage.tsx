@@ -12,20 +12,46 @@ import { motion, Variants } from "framer-motion";
 
 import useSetGrid from "@/hooks/useSetGrid";
 import useMatchCards from "@/hooks/useMatchCards";
-
+import useRestartNew from "@/hooks/useRestartnNewGame";
+import { setStopTimer } from "@/state/setup/setupSlice";
 
 export default function GamePage() {
-  const { number_of_players: players, grid_size } = useSelector(
-    (state: RootState) => state.setup
-  );
+  const {
+    number_of_players: players,
+    grid_size,
+    theme,
+  } = useSelector((state: RootState) => state.setup);
 
+  const [open, setModal] = useState<boolean>(false);
+  const { restartGame, newGameSetup } = useRestartNew();
 
+  const dispatch = useDispatch();
+
+  function handleResart() {
+    restartGame();
+    setModal(false);
+  }
+  function handleNewGame() {
+    newGameSetup();
+    setTimeout(() => {
+      setModal(false);
+    }, 1000);
+  }
+
+  useEffect(() => {
+    if (open) {
+      dispatch(setStopTimer(true));
+    } else {
+      dispatch(setStopTimer(false));
+    }
+  }, [open, dispatch]);
 
   const fourByFour: boolean = grid_size === 4 ? true : false;
+  const Icons: boolean = theme === "icons" ? true : false;
+
   const { gridArray } = useSetGrid();
   const { checkingMatch, handleCards } = useMatchCards();
 
-  
   const [divWidth, setDivWidth] = useState<number>(0);
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -35,7 +61,7 @@ export default function GamePage() {
 
   useEffect(() => {
     window.addEventListener("resize", updateWidth);
-    
+
     return () => {
       window.removeEventListener("resize", updateWidth);
     };
@@ -99,20 +125,29 @@ export default function GamePage() {
           </h1>
 
           {width < 640 && (
-            <Dialog>
+            <Dialog open={open} onOpenChange={setModal}>
               <DialogTrigger>
                 <button className="rounded-full  font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
                   Menu
                 </button>
               </DialogTrigger>
               <DialogContent className="bg-gray-300  rounded-[0.6rem] max-w-[327px] h-[226px] w-[90vw] space-y-0 gap-1 justify-between flex flex-col  border-none p-6">
-                <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primary-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem]">
+                <button
+                  onClick={handleResart}
+                  className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primary-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem]"
+                >
                   Restart
                 </button>
-                <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">
+                <button
+                  onClick={handleNewGame}
+                  className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3"
+                >
                   New Game
                 </button>
-                <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">
+                <button
+                  onClick={() => setModal(!open)}
+                  className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3"
+                >
                   Resume Game
                 </button>
               </DialogContent>
@@ -120,10 +155,16 @@ export default function GamePage() {
           )}
 
           <div className="hidden sm:flex justify-center items-center w-fit">
-            <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem] mr-4">
+            <button
+              onClick={handleResart}
+              className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem] mr-4"
+            >
               Restart
             </button>
-            <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
+            <button
+              onClick={handleNewGame}
+              className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]"
+            >
               New Game
             </button>
           </div>
@@ -142,7 +183,7 @@ export default function GamePage() {
                 <Circle
                   handleCards={handleCards}
                   value={item}
-                  icons={true}
+                  icons={Icons}
                   index={index}
                   checking={checkingMatch}
                 />

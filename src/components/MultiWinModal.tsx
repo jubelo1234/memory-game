@@ -1,13 +1,33 @@
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import useRestartNew from "@/hooks/useRestartnNewGame";
 import { RootState } from "@/state/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function MultiWinModal() {
   const [open, setModal] = useState<boolean>(false);
-  const { gameEnd, number_of_players } = useSelector(
-    (state: RootState) => state.setup
-  );
+  const {
+    gameEnd,
+    number_of_players,
+    player1Score,
+    player2Score,
+    player3Score,
+    player4Score,
+  } = useSelector((state: RootState) => state.setup);
+
+  const scores = [
+    { player: "1", score: player1Score },
+    { player: "2", score: player2Score },
+    { player: "3", score: player3Score },
+    { player: "4", score: player4Score },
+  ];
+
+  const registeredPlayers = scores.slice(0, number_of_players);
+  registeredPlayers.sort((a, b) => b.score - a.score);
+
+  const winner = registeredPlayers[0];
+
+  const { restartGame, newGameSetup } = useRestartNew();
 
   useEffect(() => {
     if (gameEnd && number_of_players >= 2) {
@@ -16,6 +36,17 @@ export default function MultiWinModal() {
       setModal(false);
     }
   }, [gameEnd, number_of_players]);
+
+  function handleResart() {
+    restartGame();
+    setModal(false);
+  }
+  function handleNewGame() {
+    newGameSetup();
+    setTimeout(() => {
+      setModal(false);
+    }, 1000);
+  }
   return (
     <AlertDialog open={open} onOpenChange={setModal}>
       <AlertDialogContent
@@ -23,42 +54,61 @@ export default function MultiWinModal() {
         id="headlessui-dialog-panel-:r1b:"
       >
         <h2 className="mt-[0.45rem] text-center text-2xl font-bold text-neutral-800 sm:text-[3rem] sm:leading-[3rem]">
-          Player 3 Wins!
+          Player {winner.player} Wins!
         </h2>
         <p className="mt-[0.1rem] text-center text-sm font-bold leading-[14px] sm:leading-[18px] text-neutral-500 sm:mt-[0.7rem] sm:text-[1.125rem]">
           Game over! Here are the results...
         </p>
         <div className="mt-4 md:mt-7 md:mb-0">
-          <div className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-800 text-white">
-            <span className="text-[0.8125rem] font-bold sm:text-[1.125rem] sm:leading-[1.125rem]">
-              Player 3 (Winner!)
-            </span>
-            <span className="text-[1.25rem] font-bold sm:text-[2rem] sm:leading-[2rem]">
-              6 Pairs
-            </span>
-          </div>
-          <div className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500">
-            <span className="text-[0.8125rem] font-bold sm:text-[1.125rem] sm:leading-[1.125rem]">
-              Player 2
-            </span>
-            <span className="text-[1.25rem] font-bold sm:text-[2rem] sm:leading-[2rem] text-neutral-700">
-              2 Pairs
-            </span>
-          </div>
+        
+          {registeredPlayers.map((item, index) => (
+            <div
+              key={index}
+              className={`mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] ${
+                item.player === winner.player
+                  ? "bg-neutral-800 text-white"
+                  : "bg-neutral-200 text-neutral-500"
+              }`}
+            >
+              <span className="text-[0.8125rem] font-bold sm:text-[1.125rem] sm:leading-[1.125rem]">
+                Player {item.player}
+                {item.player === winner.player ? " (Winner!)" : ""}
+              </span>
+              <span
+                className={`text-[1.25rem] font-bold sm:text-[2rem] sm:leading-[2rem] ${
+                  item.player === winner.player ? "" : "text-neutral-700"
+                } `}
+              >
+                {item.score} Pairs
+              </span>
+            </div>
+          ))}
         </div>
         <div className="flex flex-col sm:hidden">
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">
+          <button
+            onClick={handleResart}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3"
+          >
             Restart
           </button>
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3">
+          <button
+            onClick={handleNewGame}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-3"
+          >
             Setup New Game
           </button>
         </div>
         <div className="mt-10 hidden gap-[0.85rem] sm:grid md:grid-cols-2">
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
+          <button
+            onClick={handleResart}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]"
+          >
             Restart
           </button>
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
+          <button
+            onClick={handleNewGame}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]"
+          >
             Setup New Game
           </button>
         </div>

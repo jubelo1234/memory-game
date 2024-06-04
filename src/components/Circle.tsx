@@ -77,7 +77,7 @@ export default function Circle({
 
       <div
         className={` absolute size-full top-0 left-0 bg-neutral-700 transition-all duration-200 ease-in-out hover:bg-neutral-400 ${
-          showCard || matched ? "opacity-0" : "opacity-0"
+          showCard || matched ? "opacity-0" : "opacity-1"
         }`}
       ></div>
     </button>

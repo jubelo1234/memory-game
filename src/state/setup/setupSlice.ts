@@ -11,9 +11,16 @@ type Setupstate = {
   moves: number;
   matchedItems: (string | number)[];
   gridItems: (string | number)[];
+  gridItemsStore: (string | number)[];
   card1: string | number | null;
   card2: string | number | null;
   pickedCardIndex: number[];
+  player1Score: number;
+  player2Score: number;
+  player3Score: number;
+  player4Score: number;
+  seconds: number;
+  stopTimer: boolean;
 };
 
 const initialState: Setupstate = {
@@ -30,6 +37,13 @@ const initialState: Setupstate = {
   pickedCardIndex: [],
   gameEnd: false,
   gridItems: [],
+  gridItemsStore: [],
+  player1Score: 0,
+  player2Score: 0,
+  player3Score: 0,
+  player4Score: 0,
+  seconds: 0,
+  stopTimer: false,
 };
 
 const setupSlice = createSlice({
@@ -84,11 +98,74 @@ const setupSlice = createSlice({
     },
     setGridItems: (state, action: PayloadAction<number[] | string[]>) => {
       state.gridItems = action.payload;
+      state.gridItemsStore = action.payload;
     },
     deleteGridItem: (state, action: PayloadAction<number | string>) => {
       state.gridItems = state.gridItems.filter(
         (item) => item != action.payload
       );
+    },
+    setSeconds: (state) => {
+      state.seconds += 1;
+    },
+    setStopTimer: (state, action: PayloadAction<boolean>) => {
+      state.stopTimer = action.payload;
+    },
+    restart: (state) => {
+      state.gridItems = state.gridItemsStore;
+      state.time = "0";
+      state.moves = 0;
+      state.pickedCardIndex = [];
+      state.matchedItems = [];
+      state.card1 = null;
+      state.card2 = null;
+      state.currentPlayer = 1;
+      state.gameEnd = false;
+      state.seconds = 0;
+      state.player1Score = 0;
+      state.player2Score = 0;
+      state.player3Score = 0;
+      state.player4Score = 0;
+    },
+    newGame: (state) => {
+      (state.theme = "icons"),
+        (state.number_of_players = 1),
+        (state.grid_size = 4),
+        (state.start = false),
+        (state.gridItems = []);
+      state.seconds = 0;
+      state.gridItemsStore = [];
+      state.time = "0";
+      state.moves = 0;
+      state.pickedCardIndex = [];
+      state.matchedItems = [];
+      state.card1 = null;
+      state.card2 = null;
+      state.currentPlayer = 1;
+      state.gameEnd = false;
+      state.player1Score = 0;
+      state.player2Score = 0;
+      state.player3Score = 0;
+      state.player4Score = 0;
+    },
+    scorePlayer: (state, action: PayloadAction<number>) => {
+      switch (action.payload) {
+        case 1:
+          state.player1Score += 1;
+          break;
+        case 2:
+          state.player2Score += 1;
+          break;
+        case 3:
+          state.player3Score += 1;
+          break;
+        case 4:
+          state.player4Score += 1;
+          break;
+
+        default:
+          state.player1Score = action.payload;
+      }
     },
   },
 });
@@ -110,5 +187,10 @@ export const {
   setGridItems,
   deleteGridItem,
   setGameStart,
+  restart,
+  newGame,
+  scorePlayer,
+  setSeconds,
+  setStopTimer,
 } = setupSlice.actions;
 export default setupSlice.reducer;

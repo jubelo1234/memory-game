@@ -1,13 +1,16 @@
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import useRestartNew from "@/hooks/useRestartnNewGame";
 import { RootState } from "@/state/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 function SingleWinModal() {
   const [open, setModal] = useState<boolean>(false);
-  const { gameEnd, number_of_players } = useSelector(
+  const { gameEnd, number_of_players, time, moves } = useSelector(
     (state: RootState) => state.setup
   );
+
+  const { restartGame, newGameSetup } = useRestartNew();
 
   useEffect(() => {
     if (gameEnd && number_of_players <= 1) {
@@ -16,6 +19,17 @@ function SingleWinModal() {
       setModal(false);
     }
   }, [gameEnd, number_of_players]);
+
+  function handleResart() {
+    restartGame();
+    setModal(false);
+  }
+  function handleNewGame() {
+    newGameSetup();
+    setTimeout(() => {
+      setModal(false);
+    }, 1000);
+  }
   return (
     <AlertDialog open={open} onOpenChange={setModal}>
       <AlertDialogContent className="w-[90vw] border-none outline-none max-w-[400px] sm:max-w-[524px] md:max-w-[664px]  flex flex-col rounded-[0.6rem] bg-gray-300 py-[1.5rem] px-6 sm:rounded-[1.2rem] sm:px-14 sm:py-[3rem] sm:pb-[3.5rem] opacity-100 scale-100">
@@ -31,7 +45,7 @@ function SingleWinModal() {
               Time Elapsed
             </span>
             <span className="text-[1.25rem]  font-bold sm:text-[2rem] sm:leading-[2rem] text-neutral-700 timer">
-              0:54
+              {time}
             </span>
           </div>
           <div className="mt-2 flex items-center justify-between rounded-[0.3125rem] py-3 px-4 first:mt-0 sm:mt-4 sm:py-5 sm:px-8 xl:rounded-[0.5rem] bg-neutral-200 text-neutral-500">
@@ -39,23 +53,35 @@ function SingleWinModal() {
               Moves Taken
             </span>
             <span className="text-[1.25rem]  font-bold sm:text-[2rem] sm:leading-[2rem] text-neutral-700 timer">
-              32 Moves
+              {moves} Moves
             </span>
           </div>
         </div>
         <div className="flex flex-col sm:hidden">
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-4">
+          <button
+            onClick={handleResart}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-4"
+          >
             Restart
           </button>
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-4">
+          <button
+            onClick={handleNewGame}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-3 px-6 text-[1.125rem] sm:py-6 sm:text-[2rem] mt-4"
+          >
             Setup New Game
           </button>
         </div>
         <div className="mt-6 hidden gap-[0.85rem] sm:grid md:grid-cols-2">
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
+          <button
+            onClick={handleResart}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-primaryy-400 hover:bg-primaryy-300 focus-visible:ring-primaryy-400 text-white py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]"
+          >
             Restart
           </button>
-          <button className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]">
+          <button
+            onClick={handleNewGame}
+            className="rounded-full font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-neutral-200 text-neutral-700 hover:bg-neutral-400 hover:text-white focus-visible:ring-neutral-200 py-2 px-[1.15rem] text-base sm:py-[0.9rem] sm:px-[1.5rem] sm:text-[1.25rem]"
+          >
             Setup New Game
           </button>
         </div>

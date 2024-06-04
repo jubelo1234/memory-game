@@ -1,12 +1,27 @@
+import { RootState } from "@/state/store";
+import { useSelector } from "react-redux";
+
 type ScoreCardType = {
   player: number;
 };
 
 export default function ScoreCard({ player }: ScoreCardType) {
-  
-  const active: number = 2;
-  const activeCard: boolean = player === active;
- 
+  const {
+    currentPlayer,
+    player1Score,
+    player2Score,
+    player3Score,
+    player4Score,
+  } = useSelector((state: RootState) => state.setup);
+  const activeCard: boolean = player === currentPlayer;
+
+  const playerScores = [player1Score, player2Score, player3Score, player4Score];
+
+  const getPlayerScore = (player: number): number | undefined => {
+    return playerScores[player - 1];
+  };
+
+  const score = getPlayerScore(player);
 
   return (
     <div className="">
@@ -28,10 +43,12 @@ export default function ScoreCard({ player }: ScoreCardType) {
             activeCard ? "text-white" : "text-neutral-800"
           } text-[1.5rem] xl:leading-8 font-bold transition-colors duration-[25ms] ease-linear  sm:text-[1.5rem]  xl:text-[2rem]1`}
         >
-          0
+          {score}
         </span>
-        {activeCard && <div className="absolute w-4 sm:w-6 aspect-square bg-primaryy-400 top-[-8px] sm:top-[-12px] z-[1] left-1/2 -translate-x-1/2  transform rotate-45"></div> }
-      </div> 
+        {activeCard && (
+          <div className="absolute w-4 sm:w-6 aspect-square bg-primaryy-400 top-[-8px] sm:top-[-12px] z-[1] left-1/2 -translate-x-1/2  transform rotate-45"></div>
+        )}
+      </div>
       {activeCard && (
         <p className="mt-5 hidden text-center text-[0.8125rem] text-sm font-bold uppercase tracking-[0.375em] text-neutral-800 transition-opacity 2xl:block opacity-100">
           Current turn

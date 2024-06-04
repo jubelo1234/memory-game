@@ -3,11 +3,13 @@ import {
   clearPickedIndex,
   deleteGridItem,
   matchedArray,
+  scorePlayer,
   setCard1,
   setCard2,
+  setMoves,
 } from "@/state/setup/setupSlice";
 import { RootState } from "@/state/store";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useCheckWinner from "./useCheckWinner";
 
@@ -18,47 +20,58 @@ type UseMatchCards = {
 
 const useMatchCards = (): UseMatchCards => {
   const [checkingMatch, setCheckingMatch] = useState<boolean>(false);
-  const { card1, card2 } = useSelector((state: RootState) => state.setup);
+  const { card1, card2, currentPlayer } = useSelector(
+    (state: RootState) => state.setup
+  );
   const { checkWinner } = useCheckWinner();
   const dispatch = useDispatch();
+  const timeoutIdRef = useRef<number | null>(null);
 
-  function handleCards(cardData: string | number) {
+  const handleCards = (cardData: string | number) => {
     if (card1 === null) {
       dispatch(setCard1(cardData));
     } else {
       dispatch(setCard2(cardData));
     }
-  }
+  };
 
   useEffect(() => {
-    function handleReset() {
+    const handleReset = () => {
       dispatch(setCard1(null));
       dispatch(setCard2(null));
       dispatch(clearPickedIndex());
+      dispatch(setMoves());
       checkWinner();
       setCheckingMatch(false);
-    }
+    };
 
-    function checkCardMatch() {
+    const checkCardMatch = () => {
       if (card1 === card2) {
-        setTimeout(() => {
+        timeoutIdRef.current = window.setTimeout(() => {
           dispatch(matchedArray(card1 as string | number));
           dispatch(deleteGridItem(card1 as string | number));
+          dispatch(scorePlayer(currentPlayer));
           handleReset();
-        }, 950);
+        }, 850);
       } else {
-        setTimeout(() => {
+        timeoutIdRef.current = window.setTimeout(() => {
           dispatch(changePlayer());
           handleReset();
-        }, 950);
+        }, 850);
       }
-    }
+    };
 
     if (card1 !== null && card2 !== null) {
       setCheckingMatch(true);
       checkCardMatch();
     }
-  }, [card1, card2, dispatch, checkWinner]);
+
+    return () => {
+      if (timeoutIdRef.current !== null) {
+        clearTimeout(timeoutIdRef.current);
+      }
+    };
+  }, [card1, card2, dispatch, checkWinner, currentPlayer]);
 
   return { checkingMatch, handleCards };
 };
