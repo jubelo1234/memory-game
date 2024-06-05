@@ -16,6 +16,7 @@ import useRestartNew from "@/hooks/useRestartnNewGame";
 import { setStopTimer } from "@/state/setup/setupSlice";
 
 export default function GamePage() {
+
   const {
     number_of_players: players,
     grid_size,

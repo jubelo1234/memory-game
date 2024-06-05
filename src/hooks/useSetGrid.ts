@@ -33,21 +33,18 @@ const useSetGrid = (): UseSetGrid => {
   const fourByFour: boolean = grid_size === 4 ? true : false;
   const Icons: boolean = theme === "icons" ? true : false;
 
-  let numberCount: number;
+  const numberCount: number = 18;
+  let sliceCount: number;
 
   if (fourByFour) {
-    numberCount = 8;
+    sliceCount = 8;
   } else {
-    numberCount = 18;
+    sliceCount = 18;
   }
 
   const [gridArray, setGridArray] = useState<number[] | string[]>([]);
 
   useEffect(() => {
-    const doubledNumbersArray = Array.from(Array(numberCount).keys()).flatMap(
-      (number) => [number, number]
-    );
-
     const shuffleArray = <T>(array: T[]): T[] => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -55,6 +52,13 @@ const useSetGrid = (): UseSetGrid => {
       }
       return array;
     };
+
+    const numbersArray = Array.from(Array(numberCount).keys());
+    const shuffledNumbers = shuffleArray(numbersArray);
+
+    const doubledNumbersArray = shuffledNumbers
+      .slice(0, sliceCount)
+      .flatMap((number) => [number, number]);
 
     const scatteredNumbers = shuffleArray(doubledNumbersArray);
 
@@ -79,10 +83,10 @@ const useSetGrid = (): UseSetGrid => {
       tree,
     ];
 
+    const shuffledIcons = shuffleArray(gridIcons); //for the 4 by 4 grid
+    const IconsToBeDoubled = shuffledIcons.slice(0, 8); //for the 4 by 4 grid
     const doubledIconsArray = gridIcons.flatMap((icon) => [icon, icon]);
-    const fourByFourIcons = gridIcons
-      .slice(0, 8)
-      .flatMap((icon) => [icon, icon]);
+    const fourByFourIcons = IconsToBeDoubled.flatMap((icon) => [icon, icon]);
 
     // Shuffle the array
     const scatteredDoubledIcons = shuffleArray(doubledIconsArray);
@@ -102,7 +106,7 @@ const useSetGrid = (): UseSetGrid => {
       setGridArray(scatteredNumbers);
       dispatch(setGridItems(scatteredNumbers));
     }
-  }, [fourByFour, numberCount, Icons, dispatch]);
+  }, [fourByFour, numberCount, Icons, dispatch, sliceCount]);
 
   return { gridArray };
 };
