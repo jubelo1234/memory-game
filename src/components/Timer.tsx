@@ -1,6 +1,6 @@
 import { setSeconds, setStopTimer, setTime } from "@/state/setup/setupSlice";
 import { RootState } from "@/state/store";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Timer: React.FC = () => {
