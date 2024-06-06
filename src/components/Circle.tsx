@@ -45,7 +45,7 @@ export default function Circle({
     dispatch(setPickedIndex(index));
   }
 
-  const disableButton: boolean = showCard || checking;
+  const disableButton: boolean = showCard || matched || checking;
 
   return (
     <button
