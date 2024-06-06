@@ -16,7 +16,6 @@ import useRestartNew from "@/hooks/useRestartnNewGame";
 import { setStopTimer } from "@/state/setup/setupSlice";
 
 export default function GamePage() {
-
   const {
     number_of_players: players,
     grid_size,
@@ -118,7 +117,7 @@ export default function GamePage() {
         variants={variants}
         initial="initial"
         animate="animate"
-        className="max-w-[420px]  min-h-screen flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto"
+        className="max-w-[420px]  min-h-[100svh] flex flex-col justify-between items-center  sm:max-w-[524px] tablet:max-w-[689px] laptop:max-w-[1110px] py-6 sm:py-9 xl:pt-9 xl:pb-6 mx-auto"
       >
         <div className="flex w-full justify-between items-center">
           <h1 className="text-2xl font-bold text-neutral-800 sm:text-[2.5rem]">

@@ -42,16 +42,14 @@ export default function Home() {
         duration: 1.2,
       },
     },
-    
   };
   return (
-    <div className="min-h-screen flex justify-center items-center  w-full  bg-neutral-800">
+    <div className="min-h-[100svh] flex justify-center items-center  w-full  bg-neutral-800">
       <motion.div
         key="game"
         variants={variants}
         initial="initial"
         animate="animate"
-       
         className="w-full  flex justify-center items-center flex-col"
       >
         <h2 className="font-bold text-[2rem] text-white sm:text-[2.5rem] text-center leading-none">
